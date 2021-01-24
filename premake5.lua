@@ -1,28 +1,28 @@
-workspace "LightProjectSystem" -- Replace this name with your solution name
-    architecture "x86_64"      -- Replace this architecture with your architecture
+workspace "CppLua"
+    architecture "x86_64"
 
     configurations
     {
         "Debug",
         "Release"
     }
-    flags -- Delete this flog scope if you dont want MultiProcessorCompile
+    flags
     {
         "MultiProcessorCompile"
     }
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Dont touch this!
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-project "LightProjectSystem"  -- Replace this name with your project name
+project "CppLua"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
 
-    targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}") -- Dont touch this!
-    objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}") -- Dont touch this!
+    targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
-    files -- Dont touch this!
+    files
     {
         "src/**.h",
         "src/**.cpp"
@@ -30,7 +30,22 @@ project "LightProjectSystem"  -- Replace this name with your project name
 
     includedirs
     {
-        "src"
+        "src",
+        "%{wks.location}/src/vendor/lua/include"
+    }
+
+    libdirs
+    {
+        "%{wks.location}/src/vendor/lua/lib"
+    }
+    links
+    {
+        "lua54.lib"
+    }
+
+    postbuildcommands 
+    {
+        '{COPY} "src/vendor/lua/lib/lua54.dll" "%{cfg.targetdir}"'
     }
 
     filter "system:windows"
